@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Para mi princesa Silvia 💖</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg1:#ffc2d9;--bg2:#ffaacb;--bg3:#ff8db5;--bg4:#f06fa0;
+      --frase-bg1:rgba(160,20,75,.88);--frase-bg2:rgba(100,0,45,.92);
+      --frase-border:rgba(255,180,210,.5);
+      --star-color:rgba(255,255,180,.9);
+      --cloud-color:rgba(255,255,255,.72);
+      --hint-color:rgba(255,255,255,.75);
+      --glow1:rgba(180,30,80,.45);--glow2:rgba(255,160,200,.5);
+      --speed:1.2s;
+    }
+    body.night {
+      --bg1:#1a0a1e;--bg2:#2d0f3a;--bg3:#3d1550;--bg4:#1a0830;
+      --frase-bg1:rgba(80,0,120,.92);--frase-bg2:rgba(40,0,70,.95);
+      --frase-border:rgba(200,130,255,.5);
+      --star-color:rgba(255,255,200,1);
+      --cloud-color:rgba(180,130,220,.35);
+      --hint-color:rgba(220,180,255,.8);
+      --glow1:rgba(180,80,255,.5);--glow2:rgba(220,160,255,.6);
+    }
+
+    body {
+      min-height:100vh;
+      background:radial-gradient(ellipse at top,var(--bg1) 0%,var(--bg2) 30%,var(--bg3) 60%,var(--bg4) 100%);
+      overflow:hidden;
+      display:flex;justify-content:center;align-items:center;flex-direction:column;
+      font-family:'Great Vibes',cursive;
+      cursor:default;position:relative;
+      transition:background var(--speed);
+    }
+    body::before {
+      content:'';position:fixed;inset:0;
+      background:
+        radial-gradient(ellipse 60% 40% at 20% 80%,rgba(255,255,255,.18) 0%,transparent 70%),
+        radial-gradient(ellipse 50% 30% at 80% 20%,rgba(255,255,255,.14) 0%,transparent 70%);
+      pointer-events:none;z-index:0;transition:opacity var(--speed);
+    }
+    body.night::before{opacity:.1;}
+
+    /* ── TOGGLE ── */
+    #modeToggle {
+      position:fixed;top:16px;right:16px;z-index:100;
+      background:rgba(255,255,255,.2);
+      border:1.5px solid rgba(255,255,255,.4);
+      border-radius:50px;padding:8px 18px;cursor:pointer;
+      font-family:'Playfair Display',serif;font-style:italic;
+      font-size:.85em;color:#fff;
+      backdrop-filter:blur(8px);
+      box-shadow:0 4px 16px rgba(0,0,0,.2);
+      transition:all .4s;letter-spacing:1px;
+    }
+    #modeToggle:hover{background:rgba(255,255,255,.35);transform:scale(1.06);}
+
+    /* ── NOMBRE SILVIA ── */
+    #nombreDisplay {
+      position:fixed;top:16px;left:50%;transform:translateX(-50%);
+      z-index:100;
+      font-family:'Great Vibes',cursive;
+      font-size:clamp(1.6em,4vw,2.4em);
+      color:#fff;
+      text-shadow:
+        0 2px 0 rgba(100,0,40,.7),
+        0 4px 12px rgba(200,0,80,.5),
+        0 0 30px rgba(255,160,200,.6);
+      letter-spacing:3px;
+      animation:nombreBrillo 3s ease-in-out infinite;
+      pointer-events:none;
+    }
+    body.night #nombreDisplay {
+      text-shadow:0 2px 0 rgba(60,0,100,.8),0 4px 12px rgba(160,0,220,.6),0 0 30px rgba(200,130,255,.7);
+    }
+    @keyframes nombreBrillo {
+      0%,100%{filter:brightness(1);}
+      50%{filter:brightness(1.25) drop-shadow(0 0 12px rgba(255,200,230,.8));}
+    }
+
+    /* ── STARS ── */
+    .stars-layer{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden;}
+    .star{
+      position:absolute;border-radius:50%;
+      background:var(--star-color);
+      animation:twinkle ease-in-out infinite;
+      box-shadow:0 0 6px 2px var(--star-color);
+    }
+    .star.cross::before,.star.cross::after{
+      content:'';position:absolute;background:var(--star-color);border-radius:2px;
+      top:50%;left:50%;transform:translate(-50%,-50%);
+    }
+    .star.cross::before{width:1px;height:400%;}
+    .star.cross::after{width:400%;height:1px;}
+    @keyframes twinkle{0%,100%{opacity:.1;transform:scale(.5);}50%{opacity:1;transform:scale(1.4);}}
+
+    /* ── CLOUDS ── */
+    .cloud-layer{position:fixed;inset:0;pointer-events:none;z-index:2;}
+    .cloud{
+      position:absolute;background:var(--cloud-color);
+      border-radius:50px;filter:blur(6px);
+      animation:floatCloud linear infinite;
+      transition:background var(--speed);
+    }
+    .cloud::before,.cloud::after{content:'';position:absolute;background:inherit;border-radius:50%;}
+    .cloud::before{width:55%;height:180%;top:-50%;left:15%;}
+    .cloud::after{width:40%;height:140%;top:-30%;left:50%;}
+    @keyframes floatCloud{
+      from{transform:translateX(-220px);opacity:0;}
+      5%{opacity:1;}95%{opacity:1;}
+      to{transform:translateX(110vw);opacity:0;}
+    }
+
+    /* ── HEARTS ── */
+    .hearts-layer{position:fixed;inset:0;pointer-events:none;z-index:3;overflow:hidden;}
+    .heart{position:absolute;top:-60px;animation:fallHeart linear infinite;opacity:0;}
+    @keyframes fallHeart{
+      0%{transform:translateY(0) rotate(0deg) scale(.6);opacity:0;}
+      8%{opacity:1;}85%{opacity:.85;}
+      100%{transform:translateY(105vh) rotate(25deg) scale(1);opacity:0;}
+    }
+
+    /* ── CANVAS ── */
+    #pCanvas{position:fixed;inset:0;pointer-events:none;z-index:25;}
+
+    /* ── STAGE ── */
+    .stage{
+      position:relative;z-index:10;
+      display:flex;flex-direction:column;
+      align-items:center;gap:40px;
+      text-align:center;padding:20px;
+      margin-top:30px;
+    }
+
+    /* ── TITLE ── */
+    .titulo{
+      font-family:'Great Vibes',cursive;
+      font-size:clamp(2.2em,5.5vw,3.6em);color:#fff;
+      text-shadow:0 2px 12px var(--glow1),0 0 40px var(--glow2);
+      letter-spacing:2px;
+      animation:titlePulse 3s ease-in-out infinite;
+    }
+    @keyframes titlePulse{
+      0%,100%{text-shadow:0 2px 12px var(--glow1),0 0 40px var(--glow2);}
+      50%{text-shadow:0 2px 22px var(--glow1),0 0 80px var(--glow2);filter:brightness(1.15);}
+    }
+
+    /* ── BUTTON ── */
+    #loveButton{
+      background:none;border:none;cursor:pointer;
+      padding:0;position:relative;display:inline-block;line-height:1.15;
+    }
+    #loveButton::after{
+      content:'';position:absolute;inset:-24px;border-radius:50%;
+      background:radial-gradient(circle,rgba(255,100,160,.2) 0%,transparent 70%);
+      animation:haloBtn 2.6s ease-in-out infinite;pointer-events:none;
+    }
+    body.night #loveButton::after{background:radial-gradient(circle,rgba(180,80,255,.22) 0%,transparent 70%);}
+    @keyframes haloBtn{0%,100%{transform:scale(.85);opacity:.5;}50%{transform:scale(1.35);opacity:1;}}
+
+    .btn-text{
+      font-family:'Great Vibes',cursive;
+      font-size:clamp(3.2em,9vw,6em);
+      color:#fff;display:block;letter-spacing:3px;
+      text-shadow:
+        0 2px 0 rgba(100,0,40,.9),0 4px 0 rgba(100,0,40,.7),
+        0 6px 0 rgba(100,0,40,.5),0 8px 0 rgba(100,0,40,.3),
+        0 10px 18px rgba(80,0,30,.8),0 0 50px rgba(255,100,160,.5),
+        -1px -1px 0 rgba(255,255,255,.3);
+      filter:drop-shadow(0 10px 22px rgba(120,0,50,.7));
+      transition:text-shadow .3s,transform .3s,letter-spacing .3s,filter .3s;
+    }
+    body.night .btn-text{
+      text-shadow:
+        0 2px 0 rgba(60,0,100,.95),0 4px 0 rgba(60,0,100,.75),
+        0 6px 0 rgba(60,0,100,.55),0 8px 0 rgba(60,0,100,.35),
+        0 10px 18px rgba(40,0,80,.9),0 0 60px rgba(200,100,255,.7),
+        -1px -1px 0 rgba(255,255,255,.3);
+      filter:drop-shadow(0 10px 22px rgba(100,0,180,.8));
+    }
+    #loveButton:hover .btn-text{transform:scale(1.05) translateY(-3px);letter-spacing:5px;filter:brightness(1.2) drop-shadow(0 14px 30px rgba(120,0,50,.9));}
+    #loveButton:active .btn-text{transform:scale(.97) translateY(2px);}
+
+    .hint{
+      font-family:'Playfair Display',serif;font-style:italic;
+      font-size:clamp(.75em,2vw,1em);
+      color:var(--hint-color);letter-spacing:1.5px;
+      animation:blinkHint 2.5s ease-in-out infinite;
+      transition:color var(--speed);
+    }
+    @keyframes blinkHint{0%,100%{opacity:.45;}50%{opacity:1;}}
+
+    /* ── BOTONES INFERIORES ── */
+    .bottom-btns{
+      position:fixed;bottom:22px;left:50%;transform:translateX(-50%);
+      z-index:100;display:flex;gap:14px;flex-wrap:wrap;justify-content:center;
+    }
+    .pill-btn{
+      background:rgba(255,255,255,.22);
+      border:1.5px solid rgba(255,255,255,.45);
+      border-radius:50px;padding:10px 22px;
+      cursor:pointer;
+      font-family:'Playfair Display',serif;font-style:italic;
+      font-size:.88em;color:#fff;letter-spacing:1px;
+      backdrop-filter:blur(8px);
+      box-shadow:0 4px 16px rgba(0,0,0,.2);
+      transition:all .35s;
+    }
+    .pill-btn:hover{background:rgba(255,255,255,.38);transform:scale(1.07);}
+
+    /* ── FRASES ── */
+    .frase{
+      position:fixed;z-index:20;
+      font-family:'Playfair Display',serif;font-style:italic;font-weight:700;
+      font-size:clamp(1.05em,2.8vw,1.55em);
+      color:#fff;text-align:center;
+      max-width:290px;line-height:1.55;
+      pointer-events:none;
+      text-shadow:0 1px 5px rgba(0,0,0,.95),0 3px 12px rgba(0,0,0,.7);
+      background:linear-gradient(135deg,var(--frase-bg1),var(--frase-bg2));
+      backdrop-filter:blur(12px);
+      border:1.5px solid var(--frase-border);
+      border-radius:18px;padding:14px 20px;
+      box-shadow:0 10px 36px rgba(0,0,0,.5),0 2px 8px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.18);
+      opacity:0;transform:translateY(32px) scale(.82);
+      animation:fraseIn .65s cubic-bezier(.22,1,.36,1) forwards,
+                fraseOut .5s ease-in 4.4s forwards;
+    }
+    @keyframes fraseIn{to{opacity:1;transform:translateY(0) scale(1);}}
+    @keyframes fraseOut{to{opacity:0;transform:translateY(-18px) scale(.94);}}
+
+    /* ── BURST ── */
+    .burst-heart{position:fixed;pointer-events:none;z-index:30;animation:burstAnim 1s ease-out forwards;}
+    @keyframes burstAnim{0%{transform:translate(0,0) scale(.3);opacity:1;}100%{transform:translate(var(--dx),var(--dy)) scale(1.2);opacity:0;}}
+
+    /* ════════════════════════════════════
+       MODAL BASE
+    ════════════════════════════════════ */
+    .modal-overlay{
+      position:fixed;inset:0;z-index:200;
+      display:flex;justify-content:center;align-items:center;
+      background:rgba(0,0,0,.55);
+      backdrop-filter:blur(6px);
+      opacity:0;pointer-events:none;
+      transition:opacity .4s;
+    }
+    .modal-overlay.open{opacity:1;pointer-events:all;}
+
+    .modal-box{
+      background:linear-gradient(145deg,rgba(160,20,75,.96),rgba(80,0,40,.98));
+      border:1.5px solid rgba(255,180,210,.4);
+      border-radius:24px;
+      padding:36px 32px;
+      max-width:420px;width:90%;
+      text-align:center;
+      box-shadow:0 20px 60px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.15);
+      transform:scale(.88) translateY(20px);
+      transition:transform .4s cubic-bezier(.22,1,.36,1);
+      position:relative;
+    }
+    body.night .modal-box{background:linear-gradient(145deg,rgba(60,0,110,.96),rgba(25,0,55,.98));border-color:rgba(200,130,255,.4);}
+    .modal-overlay.open .modal-box{transform:scale(1) translateY(0);}
+
+    .modal-title{
+      font-family:'Great Vibes',cursive;
+      font-size:2.2em;color:#fff;
+      text-shadow:0 2px 10px rgba(255,100,160,.6);
+      margin-bottom:18px;
+    }
+    .modal-close{
+      position:absolute;top:14px;right:18px;
+      background:none;border:none;color:rgba(255,255,255,.6);
+      font-size:1.4em;cursor:pointer;transition:color .3s;
+    }
+    .modal-close:hover{color:#fff;}
+
+    /* ── MODAL CONTRASEÑA ── */
+    #secretInput{
+      width:100%;padding:12px 16px;
+      background:rgba(255,255,255,.12);
+      border:1.5px solid rgba(255,255,255,.3);
+      border-radius:12px;
+      font-family:'Playfair Display',serif;font-style:italic;
+      font-size:1.1em;color:#fff;
+      text-align:center;letter-spacing:3px;
+      outline:none;margin-bottom:14px;
+      transition:border .3s,box-shadow .3s;
+    }
+    #secretInput::placeholder{color:rgba(255,255,255,.4);letter-spacing:1px;}
+    #secretInput:focus{border-color:rgba(255,180,210,.7);box-shadow:0 0 0 3px rgba(255,130,180,.2);}
+    #secretInput.error{border-color:rgba(255,100,80,.7);animation:shake .4s;}
+    @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-8px);}75%{transform:translateX(8px);}}
+
+    #secretBtn{
+      background:linear-gradient(135deg,rgba(220,50,120,.9),rgba(160,10,70,.9));
+      border:none;border-radius:50px;padding:11px 30px;
+      font-family:'Playfair Display',serif;font-style:italic;
+      font-size:1em;color:#fff;cursor:pointer;letter-spacing:1px;
+      box-shadow:0 6px 20px rgba(150,0,60,.4);
+      transition:all .3s;
+    }
+    #secretBtn:hover{transform:scale(1.05);box-shadow:0 8px 28px rgba(150,0,60,.6);}
+
+    /* Mensaje secreto revelado */
+    #mensajeSecreto{
+      font-family:'Playfair Display',serif;font-style:italic;
+      font-size:1.05em;color:#fff;line-height:1.7;
+      text-shadow:0 1px 8px rgba(0,0,0,.5);
+      border-top:1px solid rgba(255,255,255,.2);
+      padding-top:16px;margin-top:4px;
+      display:none;
+    }
+    #mensajeSecreto .lock-open{font-size:2em;display:block;margin-bottom:10px;animation:popIn .5s cubic-bezier(.22,1,.36,1);}
+    @keyframes popIn{from{transform:scale(0) rotate(-20deg);}to{transform:scale(1) rotate(0);}}
+
+    /* ── MODAL RESPUESTA ── */
+    #respuestaTextarea{
+      width:100%;height:110px;padding:12px 16px;
+      background:rgba(255,255,255,.12);
+      border:1.5px solid rgba(255,255,255,.3);
+      border-radius:12px;resize:none;
+      font-family:'Playfair Display',serif;font-style:italic;
+      font-size:1em;color:#fff;line-height:1.5;
+      outline:none;margin-bottom:14px;
+      transition:border .3s;
+    }
+    #respuestaTextarea::placeholder{color:rgba(255,255,255,.4);}
+    #respuestaTextarea:focus{border-color:rgba(255,180,210,.7);}
+    #enviarRespuestaBtn{
+      background:linear-gradient(135deg,rgba(220,50,120,.9),rgba(160,10,70,.9));
+      border:none;border-radius:50px;padding:11px 30px;
+      font-family:'Playfair Display',serif;font-style:italic;
+      font-size:1em;color:#fff;cursor:pointer;letter-spacing:1px;
+      box-shadow:0 6px 20px rgba(150,0,60,.4);transition:all .3s;
+    }
+    #enviarRespuestaBtn:hover{transform:scale(1.05);}
+    #respuestaGuardada{
+      display:none;
+      font-family:'Great Vibes',cursive;
+      font-size:1.6em;color:#fff;
+      text-shadow:0 2px 10px rgba(255,150,200,.7);
+      margin-top:8px;
+    }
+
+    /* ── TOAST ── */
+    #toast{
+      position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);
+      z-index:300;
+      background:linear-gradient(135deg,rgba(160,20,75,.95),rgba(100,0,45,.98));
+      border:1.5px solid rgba(255,180,210,.4);
+      border-radius:50px;padding:12px 26px;
+      font-family:'Playfair Display',serif;font-style:italic;
+      font-size:.95em;color:#fff;letter-spacing:1px;
+      box-shadow:0 8px 28px rgba(0,0,0,.4);
+      opacity:0;pointer-events:none;
+      transition:opacity .4s,transform .4s;
+    }
+    #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  </style>
+</head>
+<body>
+
+  <button id="modeToggle">🌙 Modo noche</button>
+
+  <!-- Nombre Silvia fijo arriba -->
+  <div id="nombreDisplay">✨ Silvia Mi Princesa Hermosa ✨</div>
+
+  <div class="stars-layer"  id="starsLayer"></div>
+  <div class="cloud-layer"  id="cloudLayer"></div>
+  <div class="hearts-layer" id="heartsLayer"></div>
+  <canvas id="pCanvas"></canvas>
+
+  <div class="stage">
+    <p class="titulo">💖 Mi cielo contigo 💖</p>
+    <button id="loveButton" aria-label="Te amo mi princesa">
+      <span class="btn-text">Te Amo<br>Mi Princesa</span>
+    </button>
+    <span class="hint">✦  ✦</span>
+  </div>
+
+  <!-- Botones inferiores -->
+  <div class="bottom-btns">
+    <button class="pill-btn" id="btnRespuesta">💌 Escribirme algo</button>
+    <button class="pill-btn" id="btnSecreto">🔐 Mensaje secreto</button>
+  </div>
+
+  <!-- MODAL MENSAJE SECRETO -->
+  <div class="modal-overlay" id="modalSecreto">
+    <div class="modal-box">
+      <button class="modal-close" id="closeSecreto">✕</button>
+      <p class="modal-title">Mensaje Secreto 🔐</p>
+      <p class="modal-title">o contacta a tu amor, pero cuesta besos ehhh</p>
+      <input type="password" id="secretInput" placeholder="escribe la contraseña…" maxlength="20" autocomplete="off"/>
+      <br>
+      <button id="secretBtn">Desbloquear 💖</button>
+      <div id="mensajeSecreto">
+        <span class="lock-open">💌</span>
+        <!--Amor, desde el primer momento en que te vi supe que algo especial había llegado a mi vida. Cada día a tu lado me recuerda que el amor verdadero sí existe, y que yo tuve la suerte inmensa de encontrarlo en ti. Eres mi calma, mi alegría y mi hogar. Gracias por ser exactamente como eres. -->
+        Amor... que te puedo decir, que no sepas ya. Enserio que eres muy especial para mi, desde que llegaste a mi vida pues el solo pensar en ti dibuja una sonrisa en mi rostro, el imaginarme esos ojitos hermosos que tienes y esa sonrisa no puedo evitar enamorarme mas y mas de tí. Eres lo mejor que me paso... 💖💖💖
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL RESPUESTA -->
+  <div class="modal-overlay" id="modalRespuesta">
+    <div class="modal-box">
+      <button class="modal-close" id="closeRespuesta">✕</button>
+      <p class="modal-title">Tu respuesta 💌</p>
+      <textarea id="respuestaTextarea" placeholder="Escríbeme algo bonito, Amorcito... Me lo mereszco eeeh... jejeje 🌹" maxlength="300"></textarea>
+      <button id="enviarRespuestaBtn">Enviar mi amor 💖</button>
+      <p id="respuestaGuardada">¡Guardado en mi corazón! 💓</p>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast"></div>
+
+  <audio id="song" src="Juanes - Es Por Ti.mpeg" loop></audio>
+
+<script>
+/* ═══ MODO NOCHE ═══ */
+const modeToggle = document.getElementById('modeToggle');
+let isNight = false;
+modeToggle.addEventListener('click', () => {
+  isNight = !isNight;
+  document.body.classList.toggle('night', isNight);
+  modeToggle.textContent = isNight ? '☀️ Modo día' : '🌙 Modo noche';
+});
+
+/* ═══ ESTRELLAS ═══ */
+const starsLayer = document.getElementById('starsLayer');
+for (let i = 0; i < 60; i++) {
+  const el = document.createElement('div');
+  const cross = Math.random() > 0.55;
+  el.className = 'star' + (cross ? ' cross' : '');
+  const sz = cross ? 3+Math.random()*5 : 2+Math.random()*3.5;
+  el.style.cssText = `width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;animation-duration:${1.4+Math.random()*3.5}s;animation-delay:${Math.random()*4}s;opacity:0;`;
+  starsLayer.appendChild(el);
+}
+
+/* ═══ NUBES ═══ */
+const cloudLayer = document.getElementById('cloudLayer');
+[{w:160,h:45,top:8,dur:28},{w:210,h:55,top:18,dur:38},
+ {w:130,h:38,top:30,dur:22},{w:190,h:50,top:5,dur:45},
+ {w:240,h:60,top:60,dur:35},{w:150,h:42,top:72,dur:26},
+ {w:170,h:48,top:85,dur:40}
+].forEach((c,i) => {
+  const el = document.createElement('div');
+  el.className = 'cloud';
+  el.style.cssText = `width:${c.w}px;height:${c.h}px;top:${c.top}%;animation-duration:${c.dur}s;animation-delay:${-i*(c.dur/7)}s;opacity:${.55+Math.random()*.3};`;
+  cloudLayer.appendChild(el);
+});
+
+/* ═══ CORAZONES ═══ */
+const heartsLayer = document.getElementById('heartsLayer');
+const emojis = ['💖','💗','💓','💕','❤️','🌸','💞','🌹','✨'];
+function spawnHeart() {
+  const el = document.createElement('div');
+  el.className = 'heart';
+  el.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+  const sz=.8+Math.random()*1.4, dur=5+Math.random()*7, delay=Math.random()*dur;
+  el.style.cssText = `left:${Math.random()*100}%;font-size:${sz}em;animation-duration:${dur}s;animation-delay:${delay}s;`;
+  heartsLayer.appendChild(el);
+  setTimeout(() => el.remove(), (dur+delay)*1000+200);
+}
+for (let i=0;i<22;i++) spawnHeart();
+setInterval(spawnHeart, 600);
+
+/* ═══ PARTÍCULAS CANVAS ═══ */
+const canvas = document.getElementById('pCanvas');
+const ctx = canvas.getContext('2d');
+function resizeCanvas(){ canvas.width=innerWidth; canvas.height=innerHeight; }
+resizeCanvas(); window.addEventListener('resize', resizeCanvas);
+
+const particles = [];
+class Particle {
+  constructor(x,y){
+    this.x=x;this.y=y;
+    this.vx=(Math.random()-.5)*7;this.vy=(Math.random()-.5)*7-2.5;
+    this.r=2+Math.random()*4.5;this.life=1;this.decay=.016+Math.random()*.024;
+    const night=document.body.classList.contains('night');
+    const pal=night
+      ?['255,180,255','200,120,255','160,90,255','255,230,255']
+      :['255,100,160','255,210,90','255,155,200','255,255,190'];
+    this.col=pal[Math.floor(Math.random()*pal.length)];
+  }
+  update(){ this.x+=this.vx;this.y+=this.vy;this.vy+=.13;this.life-=this.decay;this.r*=.979; }
+  draw(){
+    if(this.life<=0)return;
+    ctx.save();ctx.globalAlpha=Math.max(0,this.life);
+    const g=ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.r);
+    g.addColorStop(0,`rgba(${this.col},1)`);g.addColorStop(1,`rgba(${this.col},0)`);
+    ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+    ctx.fillStyle=g;ctx.fill();ctx.restore();
+  }
+}
+function emit(x,y,n=52){ for(let i=0;i<n;i++) particles.push(new Particle(x,y)); }
+(function loop(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  for(let i=particles.length-1;i>=0;i--){
+    particles[i].update();particles[i].draw();
+    if(particles[i].life<=0)particles.splice(i,1);
+  }
+  requestAnimationFrame(loop);
+})();
+
+/* ═══ FRASES ═══ */
+const frases = [
+  "Eres mi razón de sonreír cada día. 🌷",
+  "Tu amor ilumina cada rincón de mi vida. 💫",
+  "Contigo todo es más hermoso y más dulce. 🍬",
+  "Eres mi sueño más bonito hecho realidad. 🌙",
+  "Siempre serás mi princesa, hoy y siempre. 👑",
+  "Tu sonrisa es mi lugar favorito en el mundo. 😊",
+  "Me enamoré de ti sin poder evitarlo. 💘",
+  "Gracias por existir y por ser mía. ✨",
+  "Cada día a tu lado es un regalo. 🎁",
+  "Eres la canción más bonita de mi vida. 🎶",
+  "En tus ojos encontré mi hogar. 🏡",
+  "Tu abrazo es el lugar más cálido del universo. 🤗",
+  "Eres el amor que siempre soñé. 🌠",
+  "Contigo el tiempo se detiene y todo es perfecto. ⏳",
+  "Eres mi mayor bendición. 🙏",
+  "Cada latido de mi corazón te pertenece. 💓",
+  "Tu amor es la única magia que necesito. 🪄",
+  "Eres la razón por la que creo en el amor. 💞",
+  "Nada en este mundo brilla más que tú. ⭐",
+  "Te elegiría una y mil veces más. 🔁",
+  "Eres mi paz en medio del caos. 🕊️",
+  "Amor mío, eres todo lo que necesito. 🫶",
+  "Gracias por hacer mi mundo más brillante. 🌟",
+  "Tu amor es mi fuerza y mi refugio. 🛡️",
+  "Haces que cada momento valga la pena. 🥂",
+  "Silvia, eres lo más bonito que me ha pasado. 🌺",
+  "Cada vez que te veo me enamoro otra vez. 💘",
+  "Contigo aprendí que el amor sí es perfecto. 🌹",
+].sort(()=>Math.random()-.5);
+
+let fraseIdx=0, frasesActivas=[];
+function mostrarFrase(){
+  if(frasesActivas.length>=2) frasesActivas.shift()?.remove();
+  const el=document.createElement('div');
+  el.className='frase';
+  el.textContent=frases[fraseIdx%frases.length]; fraseIdx++;
+  const fw=290,fh=110,vw=innerWidth,vh=innerHeight;
+  const zonas=[
+    {xMin:10,xMax:vw*.36,yMin:10,yMax:vh*.28},
+    {xMin:vw*.56,xMax:vw-fw-10,yMin:10,yMax:vh*.28},
+    {xMin:10,xMax:vw*.36,yMin:vh*.72,yMax:vh-fh-10},
+    {xMin:vw*.56,xMax:vw-fw-10,yMin:vh*.72,yMax:vh-fh-10},
+  ];
+  const z=zonas[Math.floor(Math.random()*zonas.length)];
+  el.style.left=Math.max(10,z.xMin+Math.random()*Math.max(0,z.xMax-z.xMin))+'px';
+  el.style.top =Math.max(10,z.yMin+Math.random()*Math.max(0,z.yMax-z.yMin))+'px';
+  document.body.appendChild(el);
+  frasesActivas.push(el);
+  setTimeout(()=>{el.remove();frasesActivas=frasesActivas.filter(f=>f!==el);},5300);
+}
+
+function spawnBurst(cx,cy){
+  for(let i=0;i<12;i++){
+    const el=document.createElement('div');
+    el.className='burst-heart';
+    el.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    el.style.fontSize=(1.2+Math.random()*1.2)+'em';
+    const rad=(i/12)*Math.PI*2, dist=70+Math.random()*90;
+    el.style.cssText+=`left:${cx}px;top:${cy}px;--dx:${Math.cos(rad)*dist}px;--dy:${Math.sin(rad)*dist}px;`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),1100);
+  }
+}
+
+/* ═══ BOTÓN PRINCIPAL ═══ */
+const button=document.getElementById('loveButton');
+const song=document.getElementById('song');
+let songStarted=false;
+button.addEventListener('click',(e)=>{
+  if(!songStarted){song.play().catch(()=>{});songStarted=true;}
+  emit(e.clientX,e.clientY,52);
+  spawnBurst(e.clientX,e.clientY);
+  mostrarFrase();
+});
+
+/* ═══ TOAST ═══ */
+const toast=document.getElementById('toast');
+let toastTimer;
+function showToast(msg){
+  toast.textContent=msg;toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>toast.classList.remove('show'),3000);
+}
+
+/* ═══ MODALES ═══ */
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+
+// Abrir/cerrar
+document.getElementById('btnSecreto').addEventListener('click',()=>openModal('modalSecreto'));
+document.getElementById('closeSecreto').addEventListener('click',()=>{
+  closeModal('modalSecreto');
+  document.getElementById('secretInput').value='';
+  document.getElementById('secretInput').classList.remove('error');
+  document.getElementById('mensajeSecreto').style.display='none';
+});
+
+document.getElementById('btnRespuesta').addEventListener('click',()=>openModal('modalRespuesta'));
+document.getElementById('closeRespuesta').addEventListener('click',()=>{
+  closeModal('modalRespuesta');
+  document.getElementById('respuestaGuardada').style.display='none';
+});
+
+// Cerrar al click fuera
+['modalSecreto','modalRespuesta'].forEach(id=>{
+  document.getElementById(id).addEventListener('click',function(e){
+    if(e.target===this) closeModal(id);
+  });
+});
+
+/* ═══ CONTRASEÑA ═══ */
+const PASS = '15-10-2025';
+document.getElementById('secretBtn').addEventListener('click',()=>{
+  const val = document.getElementById('secretInput').value.trim();
+  const input = document.getElementById('secretInput');
+  if(val === PASS){
+    input.classList.remove('error');
+    document.getElementById('mensajeSecreto').style.display='block';
+    emit(innerWidth/2, innerHeight/2, 80);
+    showToast('💖 ¡Mensaje desbloqueado con amor!');
+  } else {
+    input.classList.add('error');
+    setTimeout(()=>input.classList.remove('error'),500);
+    showToast('🔐 Contraseña incorrecta, mi amor…');
+  }
+});
+// Enter en input
+document.getElementById('secretInput').addEventListener('keydown',(e)=>{
+  if(e.key==='Enter') document.getElementById('secretBtn').click();
+});
+
+/* ═══ RESPUESTA DE SILVIA ═══ */
+document.getElementById('enviarRespuestaBtn').addEventListener('click', () => {
+  const txt = document.getElementById('respuestaTextarea').value.trim();
+  if (!txt) { 
+    showToast('✏️ Escríbeme algo primero…'); 
+    return; 
+  }
+
+  // Mostrar confirmación en tu página
+  document.getElementById('respuestaGuardada').style.display = 'block';
+  emit(innerWidth/2, innerHeight/2, 60);
+  spawnBurst(innerWidth/2, innerHeight/2);
+  showToast('💌 ¡Tu amor quedó guardado en mi corazón!');
+
+  // Enviar a WhatsApp (reemplaza con tu número)
+  const numero = "59169726081"; // tu número con código de país
+  const url = `https://wa.me/${numero}?text=${encodeURIComponent(txt)}`;
+  window.open(url, '_blank'); // abre WhatsApp con el mensaje
+
+  setTimeout(() => {
+    document.getElementById('respuestaTextarea').value = '';
+    document.getElementById('respuestaGuardada').style.display = 'none';
+    closeModal('modalRespuesta');
+  }, 2800);
+});
+
+</script>
+</body>
+</html> 
